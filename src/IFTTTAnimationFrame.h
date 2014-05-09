@@ -6,11 +6,16 @@
 //  Copyright (c) 2013 IFTTT Inc. All rights reserved.
 //
 
+@class IFTTTTransform3D;
+
 @interface IFTTTAnimationFrame : NSObject
 
-@property (nonatomic) CGRect frame;
-@property (nonatomic) CGFloat alpha;
-@property (nonatomic) BOOL hidden;
-@property (nonatomic) UIColor * color;
+@property (nonatomic, assign) CGRect frame;
+@property (nonatomic, assign) CGFloat alpha;
+@property (nonatomic, assign) BOOL hidden;
+@property (nonatomic, copy) UIColor *color;
+@property (nonatomic, assign) CGFloat angle;
+@property (nonatomic, strong) IFTTTTransform3D *transform;
+@property (nonatomic, assign) CGFloat scale;
 
 @end

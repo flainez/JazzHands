@@ -15,7 +15,16 @@
     if (self.keyFrames.count <= 1) return;
     
     IFTTTAnimationFrame *animationFrame = [self animationFrameForTime:time];
+
+    // Store the current transform
+    CGAffineTransform tempTransform = self.view.transform;
+
+    // Reset rotation to 0 to avoid warping
+    self.view.transform = CGAffineTransformMakeRotation(0);
     self.view.frame = animationFrame.frame;
+
+    // Return to original transform
+    self.view.transform = tempTransform;
 }
 
 - (IFTTTAnimationFrame *)frameForTime:(NSInteger)time
@@ -30,12 +39,12 @@
     CGRect frame = self.view.frame;
     frame.origin.x = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetMinX(startLocation) endValue:CGRectGetMinX(endLocation) atTime:time];
     frame.origin.y = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetMinY(startLocation) endValue:CGRectGetMinY(endLocation) atTime:time];
-    frame.size.width = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetWidth(startLocation) endValue:CGRectGetWidth(endLocation) atTime:time];
-    frame.size.height = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetHeight(startLocation) endValue:CGRectGetHeight(endLocation) atTime:time];
+    frame.size.width = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetWidth(startLocation) endValue:CGRectGetWidth(endLocation) atTime:time] ? : 0;
+    frame.size.height = [self tweenValueForStartTime:startTime endTime:endTime startValue:CGRectGetHeight(startLocation) endValue:CGRectGetHeight(endLocation) atTime:time] ? : 0;
 
     IFTTTAnimationFrame *animationFrame = [IFTTTAnimationFrame new];
-    animationFrame.frame = CGRectIntegral(frame);
-    
+    animationFrame.frame = frame;
+
     return animationFrame;
 }
 

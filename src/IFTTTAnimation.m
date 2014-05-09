@@ -61,7 +61,7 @@
     if (keyFrame.time > ((IFTTTAnimationKeyFrame *)self.keyFrames.lastObject).time) {
         [self.keyFrames addObject:keyFrame];
     } else {
-        for (NSInteger i = 0; i < self.keyFrames.count; i++) {
+        for (NSUInteger i = 0; i < self.keyFrames.count; i++) {
             if (keyFrame.time < ((IFTTTAnimationKeyFrame *)[self.keyFrames objectAtIndex:i]).time) {
                 [self.keyFrames insertObject:keyFrame atIndex:i];
                 break;
@@ -70,16 +70,18 @@
     }
     
     self.timeline = [NSMutableArray new];
-    for (NSInteger i = 0; i < self.keyFrames.count - 1; i++) {
-        IFTTTAnimationKeyFrame *keyFrame = [self.keyFrames objectAtIndex:i];
-        IFTTTAnimationKeyFrame *nextKeyFrame = [self.keyFrames objectAtIndex:i+1];
+    for (NSUInteger i = 0; i < self.keyFrames.count - 1; i++) {
+        IFTTTAnimationKeyFrame *currentKeyFrame = self.keyFrames[i];
+        IFTTTAnimationKeyFrame *nextKeyFrame = self.keyFrames[i+1];
         
-        for (NSInteger j = keyFrame.time; j <= nextKeyFrame.time; j++) {
-            [self.timeline addObject:[self frameForTime:j startKeyFrame:keyFrame endKeyFrame:nextKeyFrame]];
+        for (NSInteger j = currentKeyFrame.time + (i == 0 ? 0 : 1); j <= nextKeyFrame.time; j++) {
+            [self.timeline addObject:[self frameForTime:j
+                                          startKeyFrame:currentKeyFrame
+                                            endKeyFrame:nextKeyFrame]];
         }
     }
     
-    self.startTime = ((IFTTTAnimationKeyFrame *)[self.keyFrames objectAtIndex:0]).time;
+    self.startTime = ((IFTTTAnimationKeyFrame *)self.keyFrames[0]).time;
 }
 
 - (IFTTTAnimationFrame *)animationFrameForTime:(NSInteger)time
@@ -88,8 +90,8 @@
         return [self.timeline objectAtIndex:0];
     }
 
-    if (time - self.startTime < self.timeline.count) {
-        return [self.timeline objectAtIndex:time - self.startTime];
+    if (time - self.startTime < (NSInteger)self.timeline.count) {
+        return [self.timeline objectAtIndex:(NSUInteger)(time - self.startTime)];
     }
 
     return [self.timeline lastObject];

@@ -8,9 +8,33 @@
 
 #import "IFTTTAnimator.h"
 
+@protocol IFTTTAnimatedScrollViewControllerDelegate;
+
 @interface IFTTTAnimatedScrollViewController : UIViewController <UIScrollViewDelegate>
 
+@property (nonatomic, weak) id <IFTTTAnimatedScrollViewControllerDelegate> delegate;
+
 @property (nonatomic, strong) IFTTTAnimator *animator;
-@property (strong, nonatomic) UIScrollView *scrollView;
+@property (nonatomic, strong) UIScrollView *scrollView;
+
+@end
+
+@protocol IFTTTAnimatedScrollViewControllerDelegate <NSObject>
+
+@optional
+
+/**
+ *  The user has scrolled to the last page of the scrollview.
+ *
+ *  @param animatedScrollViewController the scroll view controller that's been scrolled
+ */
+- (void)animatedScrollViewControllerDidScrollToEnd:(IFTTTAnimatedScrollViewController *)animatedScrollViewController;
+
+/**
+ *  The user has released the scrollview (ended dragging) at the last page of the scrollview.
+ *
+ *  @param animatedScrollViewController the scroll view controller that's been scrolled
+ */
+- (void)animatedScrollViewControllerDidEndDraggingAtEnd:(IFTTTAnimatedScrollViewController *)animatedScrollViewController;
 
 @end
